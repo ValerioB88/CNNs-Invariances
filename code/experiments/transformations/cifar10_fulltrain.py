@@ -1,10 +1,11 @@
 # %%
 import argparse
-from generate_datasets.generators.extension_generators import *
 from torch.utils.data import DataLoader
 import os
-
-
+import torch
+import numpy as np
+import framework_utils
+from multiprocessing import freeze_support
 from pathlib import Path
 from experiments.transformations.transf_exp import exp_categorization_task
 from experiments.transformations.utils.datasets import get_transforms

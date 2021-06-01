@@ -57,8 +57,11 @@ for idx, c in enumerate(all_classes_ids):
         num_objs_train = objs_train
         num_objs_test = round(objs_train * (100 - train_percentage_objs) / train_percentage_objs)
         tot_objs = num_objs_test + num_objs_train
-        objs_num_selected = np.random.choice(objs_num, tot_objs, replace=False)
-
+        try:
+            objs_num_selected = np.random.choice(objs_num, tot_objs, replace=False)
+        except ValueError:
+            print(f"Class {name_class} does not contain enough objects for train and test ({tot_objs}). Skipped")
+            continue
     objs_selected_train = np.random.choice(objs_num_selected, num_objs_train, replace=False)
     objs_selected_test = set(objs_num_selected) - set(objs_selected_train)
 

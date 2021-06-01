@@ -39,8 +39,6 @@ shared_args = lambda: dict(seed=seed, project_name='All-Transformations', use_we
 
 
 def call_cat_exp():
-
-
     other_info, output_model, output_test, _ = get_fulltrain_strings_shapenet(pt_transf, max_objs, 50 if 'v' in pt_transf else 1, classes_set, 0, network_name, seed)
     exp = cat_exp(**shared_args(),
                   additional_tags=other_info + '_ONLYTEST',

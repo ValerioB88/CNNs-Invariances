@@ -13,7 +13,7 @@ gpus="1 2 3"
 
 for n in $all_nets
 do
-	for NUMOBJ in 5 50 100 250 500
+	for NUMOBJ in 50 # 5 50 100 250 500
 	do 
 		for SEED in 1 2 3
 		do

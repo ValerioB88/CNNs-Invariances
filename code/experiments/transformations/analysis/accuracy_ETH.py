@@ -18,5 +18,8 @@ def get_mean_std(pt_transf, transf, pt_objs):
     return np.mean(m), np.std(m)
 
 
+print("Trained on Transformed Objects [mean, std]")
 [print(f"{t}->{t}{get_mean_std(t, t, 250)}") for t in ['v', 't', 'r', 's', 'b', 'c']]
+
+print("\nTrained on un-Transformed Objects [mean, std]")
 [print(f"->{t}{get_mean_std('', t, 250)}") for t in ['v', 't', 'r', 's', 'b', 'c']]

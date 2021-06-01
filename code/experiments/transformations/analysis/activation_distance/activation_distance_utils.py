@@ -3,32 +3,34 @@ from ML_framework.distance_activation import CompareWith
 from PIL import Image
 from torchvision.transforms import RandomAffine
 import re
-# import nltk
-# nltk.download('wordnet')
-# from nltk.corpus import wordnet
-# syns = list(wordnet.all_synsets())
-# offsets_list = [(s.offset(), s) for s in syns]
-# offsets_dict = dict(offsets_list)
-# import nltk
-# nltk.download('wordnet')
-# d = {f'{k:08}': v.name() for k, v in offsets_dict.items()}
-# pickle.dump(d, open('./data/ShapeNet2D/id_to_name.pickle', 'wb'))
 from experiments.transformations.utils.misc import classes_sets, exp_categorization_task
 from experiments.transformations.utils.datasets import SubclassImageFolder
 from datasets import add_compute_stats, SubsetImageFolder
-from torch.utils.data.sampler import WeightedRandomSampler
 import numpy as np
 import torchvision.transforms.functional as F
 from torchvision.transforms.functional import InterpolationMode
 from pathlib import Path
-name_exp_set = 'cossim'
-this_file_path = str(Path(globals().get("__file__", "./_")).absolute().parent)
 
 
-def get_weighted_sampler(dataset):
-    weights_class = 1 / np.array([np.sum([True for i in dataset.samples if i[1] == c]) for c in range(dataset.num_classes)])
-    weights_dataset = [weights_class[i[1]] for i in dataset.samples]
-    return WeightedRandomSampler(weights=weights_dataset, num_samples=len(weights_dataset), replacement=True)
+def map_string_to_label(str):
+    if str == 'vanilla':
+        return 'Untrained'
+    if str == 'ImageNet':
+        return 'ImageNet'
+    if str == '':
+        return 'No Transformation'
+    if str == 'r':
+        return 'Rotation'
+    if str == 's':
+        return 'Scale'
+    if str == 't':
+        return 'Translate'
+    if str == 'vtrsbc':
+        return 'All'
+    if str == 'v':
+        return 'Viewpoint'
+    else:
+        return str
 
 
 class DistanceActivationScale(DistanceActivation):
@@ -198,23 +200,6 @@ class DistanceActivationTranslate(DistanceActivation):
         return base_canvas, other_canvasses, (x, y)
 
 
-# class DistanceActivationDiffClasses(DistanceActivation):
-#     def get_base_and_other_canvasses(self, class_num, name_class):
-#         selected_class = [i for i in self.dataset.samples if i[1] == class_num]
-#         num = np.random.choice(len(selected_class))
-#         image_name = selected_class[num][0]
-#
-#         default_transform = self.dataset.transform
-#         image = Image.open(image_name)
-#         base_canvas = default_transform(image)
-#
-#         selected_classes = [i for i in self.dataset.samples] #if i[1] != class_num]
-#         num = np.random.choice(len(selected_class), 50)
-#         other_images = [selected_classes[i][0] for i in num]
-#         other_canvasses = [default_transform(Image.open(i)) for i in other_images]
-#         return base_canvas, other_canvasses, None
-#
-
 class DistanceActivationViewpoint(DistanceActivation):
     def get_base_and_other_canvasses(self, class_num, name_class):
         objects = self.dataset.classes_to_subclasses[name_class]
@@ -279,6 +264,8 @@ def get_distance_fun(distance_transform):
 
 
 def get_experiment_shapeNet(type_dataset='same_classes_diff_objs'):
+    this_file_path = str(Path(globals().get("__file__", "./_")).absolute().parent)
+
     if type_dataset == 'same_classes_diff_objs':
         classes_set = 'set1'
         name_dataset = 'ShapeNet2DFullNomat/testDiffObjs'
@@ -315,7 +302,7 @@ def get_experiment_shapeNet(type_dataset='same_classes_diff_objs'):
     return exp, dataset_no_transf
 
 
-
+# This also worked but I didn't have time to prepare it properly for the paper!
 def get_cifar10_exp(network_name):
     cifar10_set2 = ['bird', 'dog', 'ship']
     exp = exp_categorization_task(seed=1,
@@ -336,7 +323,8 @@ def get_cifar10_exp(network_name):
                                                    stats=stats)
 
     return exp, dataset
-#
+
+## Some code useful for debugging
 # type_dataset = 'different_classes'
 # exp, dataset_no_transf = get_experiment_shapeNet(type_dataset)
 #
