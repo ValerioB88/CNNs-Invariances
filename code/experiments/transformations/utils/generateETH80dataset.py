@@ -7,8 +7,8 @@ from PIL import Image, ImageEnhance
 import numpy as np
 from torchvision import transforms
 folder = './data/ETH-80-master'
-# output = folder + '/transformed_darkened_excluding_extreme_views'
-output = folder + '/only_resized/'
+output = folder + '/transformed_darkened_excluding_extreme_views'
+# output = folder + '/only_resized/'
 class_list = range(11)
 obj_list = range(11)
 
@@ -26,6 +26,8 @@ for class_num in class_list:
 
             map = f'{folder}/original/{class_num}/{object_num}/maps/{basename}-map.png'
 
+            # exclude extreme views (in practice, it's only a couple of views per object)
+            # and it works more or less the same without excluding them.
             if incl < 30 or incl > 115:
                 continue
             # apply map and convert to grayscale without changing channel num
@@ -34,14 +36,10 @@ for class_num in class_list:
             c = np.array(map_pil)
             img_pil[np.where(c[:, :, 1] != 255)] = 0
             img_pil = Image.fromarray(img_pil)
-            # a = transforms.Resize(size=(128, 128))(transforms.Grayscale()(img_pil))
-            a = transforms.Resize(size=(128, 128))(img_pil)
+            a = transforms.Resize(size=(128, 128))(transforms.Grayscale()(img_pil))
+            # a = transforms.Resize(size=(128, 128))(img_pil)
             rgbimg = Image.new("RGB", a.size)
             rgbimg.paste(a)
-            # rgbimg = ImageEnhance.Brightness(rgbimg).enhance(0.7)
+            rgbimg = ImageEnhance.Brightness(rgbimg).enhance(0.7)
             rgbimg.save(f'{output}/{class_name}/O{object_num}_I{incl}_A{azi}.png')
-
-
-
-            ##
 

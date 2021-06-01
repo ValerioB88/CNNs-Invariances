@@ -286,7 +286,7 @@ def create_image_viewpoints_exp(obj_class):
             parser.add_argument("-transform_test", "--transformations_test",
                                 help="any combination of s, t, r e.g. [rst] [rs] [t]",
                                 type=str,
-                                default='')
+                                default=None)
             parser.add_argument("-do_train", "--do_train",
                                 help="If False, only do test",
                                 type=lambda x: bool(int(x)),
@@ -343,9 +343,9 @@ new_order = [selected[i] for i in all_idx]
 set1 = {}
 set2 = {}
 set_rest = {}
-# [{set1.update({k:v}) for  k,v in all_classes.items()  if re.search(f'{a}.n.', k)} for a in new_order[:10]]
-# [{set2.update({k:v}) for  k,v in all_classes.items()  if re.search(f'{a}.n.', k)} for a in new_order[10:]]
-# [{set_rest.update({k:v}) for  k,v in all_classes.items()  if re.search(f'{a}.n.', k)} for a in rest]
+[{set1.update({k:v}) for  k,v in all_classes.items()  if re.search(f'{a}.n.', k)} for a in new_order[:10]]
+[{set2.update({k:v}) for  k,v in all_classes.items()  if re.search(f'{a}.n.', k)} for a in new_order[10:]]
+[{set_rest.update({k:v}) for  k,v in all_classes.items()  if re.search(f'{a}.n.', k)} for a in rest]
 
 classes_sets = {}
 classes_sets['set1'] = list(set1.keys())

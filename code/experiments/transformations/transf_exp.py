@@ -43,7 +43,7 @@ def cat_exp(**experiment_params):
     stats = {'mean': [0.06229676, 0.0607271, 0.05646703], 'std': [0.14454809, 0.14061172, 0.12994126]}
 
     add_PIL_transforms, add_T_transforms = None, None
-    if '0' in exp.transformations:
+    if '0' in exp.transformations:  # not currently used in the paper
         tt = "".join([i for i in exp.transformations if i != 't' and i != 'r' and i != 's'])
     else:
         tt = exp.transformations
@@ -56,8 +56,6 @@ def cat_exp(**experiment_params):
     training_loader = DataLoader(train_dataset,  **get_sampler_or_batch_sampler(train_dataset), num_workers=8 if exp.use_cuda else 0, timeout=60 if exp.use_cuda else 0, pin_memory=True)
 
     ################ TESTING ##################
-    testing_loader_list = []
-
     add_PIL_tr_info_test, add_T_tr_inf_test = get_transforms(exp.transformations_test, info=True)
     add_PIL_tr_info_train, add_T_tr_inf_train = get_transforms(exp.transformations, info=True)
 

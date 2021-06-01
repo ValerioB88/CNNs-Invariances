@@ -9,9 +9,19 @@ import shutil
 import re
 import argparse
 import nltk
-nltk.download('wordnet')
+n = './data/ShapeNet2D/id_to_name.pickle'
+if not os.path.exists(n):
+    try:
+        from nltk.corpus import wordnet
+        syns = list(wordnet.all_synsets())
 
-from nltk.corpus import wordnet
+    except LookupError:
+        import nltk
+        nltk.download('wordnet')
+        from nltk.corpus import wordnet
+        syns = list(wordnet.all_synsets())
+else:
+    from nltk.corpus import wordnet
 
 np.random.seed(1)
 
@@ -21,22 +31,20 @@ offsets_dict = dict(offsets_list)
 
 parser = argparse.ArgumentParser(allow_abbrev=False)
 
-# parser.add_argument("-selfsuper", "--self_supervised", type=int, default=0)
 parser.add_argument("-otr_ote", "--perc_objects_train_test_split", type=int, default=80)
+parser.add_argument("-tot_num_objs", "--total_number_objects_to_use", type=int, default=10)
 parser.add_argument("-vtr_vte", "--perc_viewpoints_train_test_split", type=int, default=80)
-
+parser.add_argument("-o", "--output_folder_name", default='ShapeNet2DFull_nomat')
 args = parser.parse_args()
-# selfsuperv = args.self_supervised
 selfsuperv = 0
 perc_train_test_split = args.perc_objects_train_test_split
 perc_num_viewpoint_obj_train = args.perc_viewpoints_train_test_split
-
+name_dataset = args.output_folder_name
+tot_objs = args.total_number_objects_to_use
 name_to_id = {v.name(): '{:08d}'.format(int(k)) for k, v in offsets_list}
 
 folder = './data/ShapeNet2D/'
-# folder = './data/Leek3Dtry/'
 whole_dataset = '/whole_dataset_mv_nomat'  # input
-name_dataset = f"ShapeNet2DFull_nomat"  # output
 from_path = folder + '/' + whole_dataset + '/'
 shutil.rmtree(folder + '/' + name_dataset) if os.path.exists(folder + '/' + name_dataset) else None
 all_classes_ids = os.listdir(from_path)
@@ -50,10 +58,11 @@ for idx, c in enumerate(all_classes_ids):
     print(f'class: {idx}/{len(all_classes_ids)}, {name_class}')
     get_obj_num = lambda name: int(name.split("O")[1].split('_')[0])
     objs_num = np.unique(np.sort([get_obj_num(a) for a in imgs]))
-    num_objs_train = round(len(objs_num) * train_percentage_objs/100)
+    objs_num_selected = np.random.choice(objs_num, tot_objs, replace=False)
+    num_objs_train = round(len(objs_num_selected) * train_percentage_objs/100)
     num_objs_test = len(objs_num) - num_objs_train
-    objs_selected = np.random.choice(objs_num, num_objs_train, replace=False)
-    objs_excluded = set(objs_num) - set(objs_selected)
+    objs_selected_train = np.random.choice(objs_num_selected, num_objs_train, replace=False)
+    objs_excluded = set(objs_num_selected) - set(objs_selected_train)
 
     # train X classes Y objects, test X classes W objects, test Z classes
     def save_objs(selected_obj_num, type='train', separate_viewpoints=True):
@@ -78,9 +87,9 @@ for idx, c in enumerate(all_classes_ids):
             shutil.copy(from_path_obj, to_path_obj)
 
     print("Train set")
-    for idx, o in enumerate(objs_selected):
+    for idx, o in enumerate(objs_selected_train):
         if idx % 200 == 0:
-            print(f'objects: {idx}/{len(objs_selected)}')
+            print(f'objects: {idx}/{len(objs_selected_train)}')
         save_objs(o, type='train')
 
     print("Test set")
