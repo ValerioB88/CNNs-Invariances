@@ -9,19 +9,9 @@ import shutil
 import re
 import argparse
 import nltk
-n = './data/ShapeNet2D/id_to_name.pickle'
-if not os.path.exists(n):
-    try:
-        from nltk.corpus import wordnet
-        syns = list(wordnet.all_synsets())
-
-    except LookupError:
-        import nltk
-        nltk.download('wordnet')
-        from nltk.corpus import wordnet
-        syns = list(wordnet.all_synsets())
-else:
-    from nltk.corpus import wordnet
+import nltk
+nltk.download('wordnet')
+from nltk.corpus import wordnet
 
 np.random.seed(1)
 
