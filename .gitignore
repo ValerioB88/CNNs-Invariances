@@ -1,0 +1,11 @@
+**/samples**
+**/__pycache__/**
+
+/data/*
+!/data/.gitkeep
+
+/results/
+!/results/.gitkeep
+
+/models/*
+!/models/.gitkeep
