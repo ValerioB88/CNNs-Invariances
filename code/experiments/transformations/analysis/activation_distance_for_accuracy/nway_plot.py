@@ -105,8 +105,8 @@ plt.subplots_adjust(top=0.88,
                     hspace=0.185,
                     wspace=0.185)
 
-##
-## CROSS TESTS - we only have the data for the ShapeNet cross tests
+
+## CROSS TESTS - we only computed the data for the ShapeNet cross tests
 if dataset == 'ShapeNet':
     ax = plt.subplot2grid((1,5), (0, 4), colspan=4)
 

@@ -17,28 +17,13 @@ def get_sampler_or_batch_sampler(dataset):
         return dict(shuffle=True, batch_size=exp.batch_size)
 
 
-# name_exp_set = 'fulltrain'
-#
-# subfolders = os.path.dirname(globals().get("__file__")).split('code/experiments/')[1]
-# model_folder = lambda: f'./models/{subfolders}/ShapeNet/{network_name}/{name_exp_set}'
-# test_output_folder = lambda: f'./results/{subfolders}/ShapeNet/{network_name}/{name_exp_set}/'
-#
 parser = argparse.ArgumentParser(allow_abbrev=False)
 parser.add_argument("-pt_transform", "--pt_transform",
                     help='transformation the network is trained on',
                     default='', type=str)
-# parser.add_argument("-pt_max_objs", "--pt_max_objs",
-#                     help='max_objs value the network is been pretrained on ',
-#                     default=10, type=int)
-# parser.add_argument("-pt_seed", "--pt_seed",
-#                     default=1, type=int)
 
 PARAMS = vars(parser.parse_known_args()[0])
 pt_transf = PARAMS['pt_transform']
-# pt_max_objs = PARAMS['pt_max_objs']
-# pt_seed = PARAMS['pt_seed']
-# exp_args = lambda: dict(seed=seed, project_name='All-Transformations', use_weblog=2 if torch.cuda.is_available() else 2, batch_size=64, max_epochs=-1 if torch.cuda.is_available() else 3, patience_stagnation=-1 if '0' in transform else 1000, freeze_backbone=freeze_backbone, pretraining_backbone=ptbkbn, num_viewpoints_train=num_v, use_mat=mat, max_objs_per_class_train=pt_max_objs)
-
 
 exp = exp_categorization_task(project_name='All-Transformations',
                               use_weblog=2 if torch.cuda.is_available() else 2,
@@ -55,7 +40,6 @@ exp.pretraining = output_model
 stats = {'mean': [0.06229676, 0.0607271, 0.05646703], 'std': [0.14454809, 0.14061172, 0.12994126]}
 add_PIL_transforms, add_T_transforms = get_transforms(exp.transformations, info=False)
 
-# './data/ShapeNet2D/ShapeNet2DFullNomat/train'
 dataset_test = add_compute_stats(SubclassImageFolder)(name_generator=f'test ETH', root='./data/ETH-80-master/transformed_darkened/', num_objects_per_class=None, stats=stats, num_viewpoints_per_object=50 if 'v' in exp.transformations else 1, add_PIL_transforms=add_PIL_transforms, add_tensor_transforms=add_T_transforms, name_classes=['apple', 'car', 'cow', 'cup', 'dog', 'horse', 'pear'], save_load_samples_filename=None)
 
 testing_loader = DataLoader(dataset_test, **get_sampler_or_batch_sampler(dataset_test), num_workers=8 if exp.use_cuda else 0, timeout=60 if exp.use_cuda else 0, pin_memory=True)

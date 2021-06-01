@@ -239,7 +239,7 @@ def create_image_viewpoints_exp(obj_class):
         def __init__(self, **kwargs):
             self.diff_classes_set = None
             self.classes_set = None
-            self.use_mat = None
+            self.shapenet_folder = None
             self.num_viewpoints_train = None
             self.num_viewpoints_test = None
             self.max_objs_per_class_train = None
@@ -259,10 +259,10 @@ def create_image_viewpoints_exp(obj_class):
                                 help="Specify the object set for testing [set1], [set2]",
                                 type=str,
                                 default=None)
-            parser.add_argument("-mat", "--use_mat",
-                                help="Specify whether to use material",
-                                type=lambda x: bool(int(x)),
-                                default=True)
+            parser.add_argument("-shapenet_folder", "--shapenet_folder",
+                                help="Specify the folder to use in ./data/ShapeNet2D/",
+                                type=str,
+                                default='ShapeNet2DFullNomat')
             parser.add_argument("-max_objs_per_class_train", "--max_objs_per_class_train",
                                 help="Determines the maximum number of objects per each class from the ShapeNet dataset for training",
                                 type=int,
@@ -296,7 +296,7 @@ def create_image_viewpoints_exp(obj_class):
         def finalize_init(self, PARAMS, list_tags):
             self.classes_set = PARAMS['classes_set']
             self.diff_classes_set = PARAMS['diff_classes_set']
-            self.use_mat = PARAMS['use_mat']
+            self.shapenet_folder = PARAMS['shapenet_folder']
             self.num_viewpoints_train = PARAMS['num_viewpoints_train']
             self.num_viewpoints_test = PARAMS['num_viewpoints_test']
             self.max_objs_per_class_train = PARAMS['max_objs_per_class_train']

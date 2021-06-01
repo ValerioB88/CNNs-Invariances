@@ -287,7 +287,6 @@ def get_experiment_shapeNet(type_dataset='same_classes_diff_objs'):
                                   transformations='',
                                   transformations_test='',
                                   pretraining=pt,
-                                  use_mat=False,
                                   use_weblog=False,
                                   use_device_num=3,
                                   verbose=False)

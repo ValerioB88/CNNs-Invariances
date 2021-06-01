@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import torchvision
-from sty import fg, rs
+from sty import fg, rs, ef
 from torch import Tensor
 from torch.utils.data import Sampler, WeightedRandomSampler, RandomSampler
 from torchvision.datasets import DatasetFolder

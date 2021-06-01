@@ -35,7 +35,7 @@ seed = PARAMS['seed']
 network_name = PARAMS['network_name']
 
 
-shared_args = lambda: dict(seed=seed, project_name='All-Transformations', use_weblog=2 if torch.cuda.is_available() else 2, batch_size=64, max_epochs=-1 if torch.cuda.is_available() else 3, patience_stagnation=-1 if '0' in exp_transf else 1000, freeze_backbone=freeze_backbone,  pretraining_backbone=ptbkbn, num_viewpoints_train=num_v, use_mat=mat, max_objs_per_class_train=max_objs)
+shared_args = lambda: dict(seed=seed, project_name='All-Transformations', use_weblog=2 if torch.cuda.is_available() else 2, batch_size=64, max_epochs=-1 if torch.cuda.is_available() else 3, patience_stagnation=-1 if '0' in exp_transf else 1000, freeze_backbone=freeze_backbone,  pretraining_backbone=ptbkbn, num_viewpoints_train=num_v, max_objs_per_class_train=max_objs)
 
 
 def call_cat_exp():

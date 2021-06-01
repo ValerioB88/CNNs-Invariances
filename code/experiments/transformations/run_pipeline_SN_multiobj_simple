@@ -1,0 +1,24 @@
+#!/bin/bash
+
+script=$(dirname $0)/shapenet_fulltrain.py
+
+
+all_nets="samediffnet resnet18 resnet50 vgg11bn vgg19bn alexnet googlenet densenet201"
+name_folder=ShapeNet2DNomat_50objs
+
+for n in $all_nets
+do
+	for NUMOBJ in 50
+	do 
+		for SEED in 1 2 3
+		do
+			python $script --network_name $n --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED 
+			python $script --network_name $n -transform v --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED 
+			python $script --network_name $n -transform t --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED
+			python $script --network_name $n -transform r --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED
+			python $script --network_name $n -transform s --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED
+			python $script --network_name $n -transform b --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED
+			python $script --network_name $n -transform c --exp_max_obj $NUMOBJ --shapenet_folder $name_folder --seed $SEED
+		done
+	done
+done

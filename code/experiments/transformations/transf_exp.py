@@ -38,7 +38,7 @@ def cat_exp(**experiment_params):
             return dict(shuffle=True, batch_size=exp.batch_size)
 
     exp = exp_categorization_task(**experiment_params)
-    name_folder = f'ShapeNet2DFull{"Nomat" if not exp.use_mat else ""}'
+    name_folder = exp.shapenet_folder
 
     stats = {'mean': [0.06229676, 0.0607271, 0.05646703], 'std': [0.14454809, 0.14061172, 0.12994126]}
 
