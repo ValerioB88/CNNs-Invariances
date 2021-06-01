@@ -46,8 +46,8 @@ def get_values(pt_transf, transf, objs=100):
     return mean_acc, std_acc
 
 
-dataset = 'ETH_grayscale_darkened_nobkg'
-# dataset = 'ShapeNet'
+# dataset = 'ETH_grayscale_darkened_nobkg'
+dataset = 'ShapeNet'
 
 untransformed = {}
 transformed = {}
