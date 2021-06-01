@@ -1,0 +1,15 @@
+[submodule "generate_datasets/generators"]
+	path = code/generate_datasets/generators
+	url = https://github.com/ValerioB88/generators
+[submodule "external/Image_Foveation_Python"]
+	path = code/external/Image_Foveation_Python
+	url = git@github.com:ValerioB88/Image_Foveation_Python.git
+[submodule "ML_framework"]
+	path = code/ML_framework
+	url = https://github.com/ValerioB88/ML_framework
+[submodule "external/self-supervised-relational-reasoning2"]
+	path = code/external/self-supervised-relational-reasoning2
+	url = https://github.com/ValerioB88/self-supervised-relational-reasoning.git
+[submodule "code/ML_framework"]
+	path = code/ML_framework
+	url = git@github.com:ValerioB88/ML_ERC.git

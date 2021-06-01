@@ -1,0 +1,46 @@
+#!/bin/bash
+
+script=$(dirname $0)/ETH_test.py
+log_folder=$(dirname $0)/logfolder/
+jb=./code/job_manager.py
+mkdir $log_folder
+
+python $jb -reset
+
+
+all_nets="samediffnet"
+gpus="1 2 3"
+
+for n in $all_nets
+do
+	for NUMOBJ in 250
+	do 
+		for SEED in 1 2 3
+		do
+			# python $jb -command "python $script -n samediffnet -pt_transform v -transform v --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -pt_transform t -transform t --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -pt_transform r -transform r --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -pt_transform s -transform s --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -pt_transform b -transform b --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -pt_transform c -transform c --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			
+			python $jb -command "python $script -n samediffnet --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script -n samediffnet -pt_transform v --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script -n samediffnet -pt_transform t --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script -n samediffnet -pt_transform r --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script -n samediffnet -pt_transform s --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script -n samediffnet -pt_transform b --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script -n samediffnet -pt_transform c --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			
+			# python $jb -command "python $script -n samediffnet -transform v --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -transform t --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -transform r --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -transform s --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -transform b --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script -n samediffnet -transform c --max_objs_per_class_train $NUMOBJ -seed $SEED" -gpus $gpus -max 2 &
+		done
+	done
+done
+
+sleep 5 && tail -F /dev/null
+

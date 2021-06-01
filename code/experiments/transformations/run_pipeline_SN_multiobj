@@ -1,0 +1,53 @@
+#!/bin/bash
+
+script=$(dirname $0)/shapenet_fulltrain.py
+log_folder=$(dirname $0)/logfolder/
+jb=./code/job_manager.py
+mkdir $log_folder
+
+python $jb -reset
+
+
+# all_nets="samediffnet resnet18 resnet50 vgg11bn vgg19bn alexnet googlenet densenet201"
+all_nets=samediffnet
+gpus="1 2 3"
+
+for n in $all_nets
+do
+	for NUMOBJ in 250
+	do 
+		for SEED in 2 3
+		do
+			python $jb -command "python $script --network_name $n --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			# python $jb -command "python $script --network_name $n -transform vtrsbc --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script --network_name $n -transform v --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script --network_name $n -transform t --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script --network_name $n -transform r --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script --network_name $n -transform s --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script --network_name $n -transform b --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+			python $jb -command "python $script --network_name $n -transform c --exp_max_obj $NUMOBJ --seed $SEED" -gpus $gpus -max 2 &
+		done
+	done
+done
+
+sleep 5 && tail -F /dev/null
+
+
+
+# for NUMOBJ in 1 5 25 50 100 250 500
+# do 
+	# for SEED in 1 2 3
+	# do
+		# python $jb -command "python $script --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform vtrsbc --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform v --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform t --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform r --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform s --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform b --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+		# python $jb -command "python $script -transform c --exp_max_obj $NUMOBJ --seed $SEED" -gpus 1 2 3 -max 2 &
+	# done
+# done
+
+
+# sleep 5 && tail -F /dev/null

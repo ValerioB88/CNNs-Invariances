@@ -1,0 +1,33 @@
+#!/bin/bash
+
+script=$(dirname $0)/shapenet_lineval.py
+log_folder=$(dirname $0)/logfolder/
+
+mkdir $log_folder
+python $script -pt_transform 0t -test_transform t -pt_objs 100 -n relationNetLineval -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+
+# python $script -test_transform t -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform r -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform s -use_device_num 3 & #> ${log_folder}/log_ncv.txt &# python $script -pt_transform vtrs -test_transform vtrs -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform t -test_transform t -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform r -test_transform r -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform s -test_transform s -use_device_num 3 & #> ${log_folder}/log_ncv.txt &
+
+
+
+
+
+# python $script -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform vtrs -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform v -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform t -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform r -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -test_transform s -use_device_num 3 & #> ${log_folder}/log_ncv.txt &# python $script -pt_transform vtrs -test_transform vtrs -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform s -test_transform s -use_device_num 1 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform r -test_transform r -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform t -test_transform t -use_device_num 3 & #> ${log_folder}/log_ncv.txt &
+
+# python $script -pt_transform v -test_transform v -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+# python $script -pt_transform vtrs -test_transform vtrs -use_device_num 2 & #> ${log_folder}/log_ncv.txt &
+
+sleep 5 && tail -F /dev/null
