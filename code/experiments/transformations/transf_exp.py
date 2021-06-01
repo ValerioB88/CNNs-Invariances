@@ -1,14 +1,13 @@
-# %%
-from generate_datasets.generators.extension_generators import *
 from torch.utils.data import DataLoader
+from multiprocessing import freeze_support
 import os
-
 from datasets import add_compute_stats
-
+import numpy as np
 from torch.utils.data.sampler import WeightedRandomSampler
 from pathlib import Path
 from experiments.transformations.utils.misc import classes_sets, exp_categorization_task
 from experiments.transformations.utils.datasets import SubclassImageFolder, SameDifferentSampler, add_unpack_transf_info, get_transforms
+import framework_utils
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 desired_width = 320
@@ -40,9 +39,7 @@ def cat_exp(**experiment_params):
 
     exp = exp_categorization_task(**experiment_params)
     name_folder = f'ShapeNet2DFull{"Nomat" if not exp.use_mat else ""}'
-    # stats = {'mean': [0.04724697, 0.04605399, 0.04281598], 'std': [0.12911423, 0.12559199, 0.11604273]}
 
-    # this are the stats for the untransformed version, whole dataset
     stats = {'mean': [0.06229676, 0.0607271, 0.05646703], 'std': [0.14454809, 0.14061172, 0.12994126]}
 
     add_PIL_transforms, add_T_transforms = None, None
