@@ -4,7 +4,7 @@ This document contains necessary info to replicate the results from the paper.
 # Datasets
 ## ShapeNet
 The ShapeNet dataset with 50 objects per class is included. We have verified in the paper that training on 50 Objects or 500 doesn't make much different, and sharing a ShapeNet dataset with >50 objects is too demanding in terms of space.
-To make things work, put the dataset in `./data`
+To make things work, put the dataset in `./data`.
 We use 10 classes for training and 10 classes for computing the cosine similarity and other metrics. This is done automatically in the script. You can also use a different number of objects (lower than 50), which will be automatically computed in the script. You won't need to touch this dataset folders. 
 The 20 classes are all taken from the folder `./data/ShapeNet2D/ShapeNet2DNomat_50objs/train`. The other folders will be used for a variety of tests.
 

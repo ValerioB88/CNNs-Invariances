@@ -9,6 +9,7 @@ import pickle
 import matplotlib.pyplot as plt
 import sty
 
+
 def rearrange_multiplots():
     axm = np.reshape(ax, (4, 4))
     cc = axm[:, 1]
@@ -29,6 +30,7 @@ def rearrange_multiplots():
     for idx, c in enumerate(cc):
         t = c.set_title(map_net_to_netstring(all_nets[idx]), size=size_text, loc='center')
         t.set_position((1.0, -1.55))
+
 
 def map_net_to_netstring(s):
     if s == 'alexnet':
@@ -97,7 +99,6 @@ def plot_glob(pt_transf, transf, folder, distance, type_plot, ax=None, label=Non
         D = mean_any_obj[layer_index]
         D2 = mean_same_class_diff_obj[layer_index]
         G = (I - D) / (1 - D)
-        # G2 = 1 - (I/D)
 
         if type_plot == 'image':
             # I forgot to do the comparisong with ITSELF at alpha level (rot=0, scale etc =1), which cossim is obviously 1 - but not having that values create ugly looking plots, so let's add it manually. We do this for each layer.
@@ -137,8 +138,8 @@ def plot_glob(pt_transf, transf, folder, distance, type_plot, ax=None, label=Non
         if transf == 'Translate':
             ax.plot(64, 64, marker='x', markersize=8, markeredgecolor='k', markeredgewidth=3)
             # ax.set_xticks([])
-            ax.set_yticks([124])
-            ax.set_xticks([0, 124])
+            ax.set_yticks([])
+            ax.set_xticks([])
             ax.set_xlim([0, 124])
             ax.set_ylim([0, 124])
             # ticks = list(range(0, 125, 25))
@@ -147,7 +148,7 @@ def plot_glob(pt_transf, transf, folder, distance, type_plot, ax=None, label=Non
     else:
         ax.plot(x_values, v,
                 linewidth=1 if type_plot == 'image' else 2,
-                linestyle='-' if pt_transf != 'ImageNet' and pt_transf != 'vanilla' and pt_transf != '' else '--',
+                linestyle='--' if type_plot == 'D' else ('-' if type_plot == 'I' else ':'),
                 label=label,
                 color='k' if type_plot == 'image' else color_net[network_name],
                 marker='o' if type_plot == 'image' else None,
@@ -177,7 +178,7 @@ def plot_set(pt_list, diffAct, type_plot, ax=None):
         f = plot_glob(p, diffAct, folder, metric, type_plot, ax=ax, label=map_string_to_label(network_name) if idx == 0 else None)
         if (diffAct == 'Translate' or diffAct == 'VP') and f:
             # ax.figure.colorbar(im)
-            plt.suptitle(network_name, size=size_text)
+            # plt.suptitle(network_name, size=size_text)
             plt.grid(False)
             plt.setp(ax.get_xticklabels(), fontsize=size_text)
             plt.setp(ax.get_yticklabels(), fontsize=size_text)
@@ -197,11 +198,10 @@ def plot_set(pt_list, diffAct, type_plot, ax=None):
 layer_index = -1
 
 ##
-plt.close('all')
 size_text = 20
 adjust = True
 ax = None
-metric = 'euclidean'
+metric = 'cossim'
 objs = 250
 folder = 'ShapeNet'
 save_path = './results/transformations/figures/single_figs/'
@@ -210,18 +210,23 @@ color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
 all_nets = ['alexnet', 'resnet18', 'resnet50', 'vgg11bn', 'vgg19bn', 'googlenet',  'densenet201', 'samediffnet']
 color_net = {k: v for k, v in zip(all_nets, color_cycle)}
 
-# The metric specific in section "Experiment / Invariant Representations Analysis"
-# G is used in the main text. Further anaylsis of I, D, D2 are performed. Change it as pleased.
-tp = 'G'  # G, D, I, D2
-
+# type = None
+type = 'TRANSF'
 ## Rotate
 fig, ax = plt.subplots(2, 2, figsize=(8*2, 5.5*2), sharex=False, sharey=True)
 ax = ax.flatten()
 i = 0
+x = ['r'] if type == 'TRANSF' else ['']
+tp = 'D'
 for network_name in all_nets:
-    plot_set(pt_list + ['r'], 'Rotate', type_plot=tp, ax=ax[0]); i += 1
+    plot_set(x, 'Rotate', type_plot=tp, ax=ax[0]); i += 1
+tp = 'I'
+for network_name in all_nets:
+    plot_set(x, 'Rotate', type_plot=tp, ax=ax[0]); i += 1
+tp = 'G'
+for network_name in all_nets:
+    plot_set(x, 'Rotate', type_plot=tp, ax=ax[0]); i += 1
 
-plot_set(['r'], 'Rotate', type_plot='image', ax=ax[0]) if tp == 'G' else None
 
 ax[0].set_xlim(-180, 180)
 ax[0].set_ylim(-0.2, 1.1)
@@ -229,10 +234,17 @@ ax[0].set_xticks([-180, -90, 0, 90, 180])
 
 # ## Scale
 i = 0
+x = ['s'] if type == 'TRANSF' else ['']
 
+tp = 'D'
 for network_name in all_nets:
-    plot_set(pt_list + ['s'], 'Scale', type_plot=tp, ax=ax[1]); i += 1
-plot_set(['s'], 'Scale', type_plot='image', ax=ax[1]) if tp == 'G' else None
+    plot_set(x, 'Scale', type_plot=tp, ax=ax[1]); i += 1
+tp = 'I'
+for network_name in all_nets:
+    plot_set(x, 'Scale', type_plot=tp, ax=ax[1]); i += 1
+tp = 'G'
+for network_name in all_nets:
+    plot_set(x, 'Scale', type_plot=tp, ax=ax[1]); i += 1
 
 ax[1].set_xticks([0.2, 0.6, 1, 1.4, 1.8])
 ax[1].set_xlim(0.2, 1.8)
@@ -240,9 +252,17 @@ ax[1].set_ylim(-0.2, 1.1)
 
 # ## Brightness
 i = 0
+x = ['b'] if type == 'TRANSF' else ['']
+
+tp = 'D'
 for network_name in all_nets:
-    plot_set(pt_list + ['b'], 'Brightness', type_plot=tp, ax=ax[2]); i += 1
-plot_set(['b'], 'Brightness', type_plot='image', ax=ax[2]) if tp == 'G' else None
+    plot_set(x, 'Brightness', type_plot=tp, ax=ax[2]); i += 1
+tp = 'I'
+for network_name in all_nets:
+    plot_set(x, 'Brightness', type_plot=tp, ax=ax[2]); i += 1
+tp = 'G'
+for network_name in all_nets:
+    plot_set(x, 'Brightness', type_plot=tp, ax=ax[2]); i += 1
 
 ax[2].set_xticks([0.2, 0.6, 1, 1.4, 1.8])
 ax[2].set_xlim(0.2, 1.8)
@@ -251,37 +271,57 @@ ax[2].set_ylim(-0.1, 1.1)
 # #
 # ## Contrast
 i = 0
+x = ['c'] if type == 'TRANSF' else ['']
+
+tp = 'D'
 for network_name in all_nets:
-    plot_set(pt_list + ['c'], 'Contrast', type_plot=tp, ax=ax[3]); i += 1
-plot_set(['c'], 'Contrast', type_plot='image', ax=ax[3]) if tp == 'G' else None
+    plot_set(x, 'Contrast', type_plot=tp, ax=ax[3]); i += 1
+tp = 'I'
+for network_name in all_nets:
+    plot_set(x, 'Contrast', type_plot=tp, ax=ax[3]); i += 1
+tp = 'G'
+for network_name in all_nets:
+    plot_set(x, 'Contrast', type_plot=tp, ax=ax[3]); i += 1
 
 ax[3].set_xticks([0.2, 0.6, 1, 1.4, 1.8])
 ax[3].set_xlim(0.2, 1.8)
 ax[3].set_ylim(-0.1, 1.1)
 
 
-plt.savefig(save_path + f'rscb_{tp}_{metric}.svg', format='svg')
+plt.savefig(save_path + f'SUPPL_rscb_{type}.svg', format='svg')
 
-#
+
 ## VP
+x = ['v'] if type == 'TRANSF' else ['']
 i = 0
 fig, ax = plt.subplots(4, 4, figsize=(21.50, 12.14), sharex=True, sharey=True)
 ax = ax.flatten()
 for network_name in all_nets:
-    plot_set([''], 'VP', type_plot=tp, ax=ax[i]); i += 1
-    plot_set(['v'], 'VP', type_plot=tp, ax=ax[i]); i += 1
-
+    tp = 'I'
+    plot_set(x, 'VP', type_plot=tp, ax=ax[i]); i += 1
+    tp = 'D'
+    plot_set(x, 'VP', type_plot=tp, ax=ax[i]); i += 1
+    tp = 'G'
+    plot_set(x, 'VP', type_plot=tp, ax=ax[i]);
+    i += 1
 rearrange_multiplots()
-plt.savefig(save_path + f'VP_allnet_{tp}_{metric}.svg', format='svg')
+plt.savefig(save_path + f'VP_allnet_{type}.svg', format='svg')
 
 
 ## Translate
+plt.close('all')
 i = 0
+x = ['t'] if type == 'TRANSF' else ['']
 fig, ax = plt.subplots(3, 6, figsize=(19.89, 10.51), sharex=True, sharey=True)
 ax = ax.flatten()
 for network_name in all_nets:
-    plot_set([''], 'Translate', type_plot=tp, ax=ax[i]); i += 1
-    plot_set(['t'], 'Translate', type_plot=tp, ax=ax[i]); i += 1
+    tp = 'I'
+    plot_set(x, 'Translate', type_plot=tp, ax=ax[i]); i += 1
+    tp = 'D'
+    plot_set(x, 'Translate', type_plot=tp, ax=ax[i]); i += 1
+    tp = 'G'
+    plot_set(x, 'Translate', type_plot=tp, ax=ax[i]);
+    i += 1
 
 axm = np.reshape(ax, (3, 6))
 cc = axm[:, 1]
@@ -321,11 +361,16 @@ cc = [x for idx, x in enumerate(ax) if idx in range(0, 16, 2)]
 for idx, c in enumerate(cc):
     t = c.set_title(map_net_to_netstring(all_nets[idx]), size=size_text, loc='center')
     t.set_position((1.0, -1.55))
-plt.savefig(save_path + f'Translate_allnet_{tp}_{metric}.svg', format='svg')
 
+# plt.subplots_adjust(top=0.88,
+# bottom=0.11,
+# left=0.11,
+# right=0.9,
+# hspace=0.36,
+# wspace=0.035)
 #
-# framework_utils.save_figure_layout(project_path + 'all_layers.l')
-# framework_utils.load_figure_layout(project_path + 'all_layers.l')
+plt.savefig(save_path + f'Translate_allnets_{type}.svg', format='svg')
+#
 
 
 ##
