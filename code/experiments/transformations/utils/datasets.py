@@ -160,7 +160,6 @@ class SelectObjects(MyImageFolder):
             pickle.dump(self.samples, open(save_load_samples_filename, 'wb'))
 
     def _find_classes(self, dir: str):
-        #re.findall(r'[a-zA-Z]+_?[a-zA-Z]+.n.\d+', self.name_classes) if self.name_classes is not None else None
         classes = [d.name for d in os.scandir(dir) if d.is_dir() and (d.name in self.name_classes if self.name_classes is not None else True)]
         classes.sort()
         class_to_idx = {cls_name: i for i, cls_name in enumerate(classes)}
@@ -225,8 +224,6 @@ def get_subclass_with_azi_incl(idx_to_class, sample):
 
 class SameDifferentSampler(Sampler):
     def get_subclasses_weighted_sampler(self, dataset):
-        # print("QUI: ")
-        # print(np.array([np.sum([True for k, v in dataset.subclasses_to_classes.items() if v == c]) for c in range(len(dataset.classes))]))
         weights_class = 1 / np.array([np.sum([True for k, v in dataset.subclasses_to_classes.items() if v == c]) for c in range(len(dataset.classes))])
         weights_dataset = [weights_class[dataset.subclasses_to_classes[i]] for i in dataset.subclasses_names]
         return WeightedRandomSampler(weights=weights_dataset, num_samples=len(dataset.subclasses_names), replacement=True)

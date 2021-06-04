@@ -138,9 +138,6 @@ if dataset == 'ShapeNet':
     cb = get_values('c', 'b', 250)
     col.append(color_cycle[network_list.index(network_name)])
 
-    # transformed[network_name] = np.array([get_values(tt, tt, 250) for tt in ['v', 't', 'r', 's', 'b', 'c']])
-    # fig, ax = plt.subplots(1, 1, figsize=(5, 8), sharex=True, sharey=True)
-
     values = [tv, vt, rt, sr, bs, cb]
     x = np.arange(0, 1.5*len(values), 1.5)
     ax.bar(x, [i[0] for i in values], yerr=[i[1] for i in values], color=col,  error_kw=dict(lw=3, capsize=4, capthick=3))

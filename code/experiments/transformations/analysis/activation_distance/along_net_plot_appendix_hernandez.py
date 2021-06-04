@@ -93,9 +93,6 @@ def get_activations(pt_transf, transf, folder, distance):
             idx = [idx for idx, i in enumerate(x_values) if np.isclose(i, 0.56842105)][0]
         if transf == 'Contrast':
             idx = [idx for idx, i in enumerate(x_values) if np.isclose(i, 0.5368421)][0]
-        # I = np.array([np.mean(i) for i in mean_same_obj])
-        # D = np.array([np.mean(i) for i in mean_any_obj])
-        # D2 = np.array([np.mean(i) for i in mean_same_class_diff_obj])
         I = np.array([i[idx] for i in mean_same_obj])
         D = np.array([i[idx] for i in mean_any_obj])
         D2 = np.array([i[idx] for i in mean_same_class_diff_obj])
@@ -126,8 +123,6 @@ def plot_set(pt_list, diffAct, ax=None, **kwargs):
     lss = ['-','--']
     for idx, p in enumerate(pt_list):
         mean, std = get_activations(p, diffAct, folder, metric)
-        # ax.plot(range(len(layer)), mean, linewidth=1, label=map_string_to_label(diffAct) if idx == 0 else None, color=color_cycle[i], ls=lss[idx],**kwargs)
-        # ax.fill_between(range(len(layer)), mean - std, mean + std, alpha=0.1, color=color_cycle[i], **kwargs)
         ax.set_xticks(range(len(layer)))
         ax.set_xticklabels(only_get_interesting_labels(layer), rotation=90)
         plt.setp(ax.get_xticklabels(), rotation=90)

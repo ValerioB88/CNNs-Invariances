@@ -2,14 +2,14 @@ import matplotlib
 import matplotlib.pyplot as plt
 import pickle
 import numpy as np
-from experiments.transformations.utils.misc import project_path, get_fulltrain_strings_shapenet
+from experiments.transformations.utils.misc import get_fulltrain_strings_shapenet
 import seaborn as sn
-from mpl_toolkits.mplot3d import Axes3D
 import sty
 
 sn.set(style="dark")
 sn.axes_style()
 size_text = 20
+
 
 def map_string_to_label(str):
     if str == 'vanilla':
@@ -126,11 +126,11 @@ for i, t in enumerate(transformation_list):
 fig.text(0.5, 0.04, 'Number of Trained Objects per class', ha='center', size=size_text)
 plt.tight_layout()
 plt.subplots_adjust(top=0.934,
-bottom=0.160,
-left=0.048,
-right=0.983,
-hspace=0.2,
-wspace=0.218)
+                    bottom=0.160,
+                    left=0.048,
+                    right=0.983,
+                    hspace=0.2,
+                    wspace=0.218)
 
 save_path = './results/transformations/figures/single_figs/'
 plt.savefig(save_path + 'multi_objs_acc.svg', format='svg')

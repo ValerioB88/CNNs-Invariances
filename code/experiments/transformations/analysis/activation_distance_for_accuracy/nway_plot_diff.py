@@ -63,10 +63,9 @@ diff = np.array([np.array([tr_ETH[s][n]-tr_shapenet[s][n] for n in network_list]
 diff.shape
 m = np.mean(diff, axis=0)
 s = np.std(diff, axis=0)
-np.mean(diff) # drop across all networks and transformation
+np.mean(diff)  # drop across all networks and transformation
 
 plt.close('all')
-# color_cycle = sn.color_palette("hls",8)
 color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 space_between_bars = 0.25
@@ -77,7 +76,6 @@ values_mean = m
 values_std = s
 fig, ax = plt.subplots(1, 1, figsize=(22, 5), sharex=True, sharey=True)
 plt.rcParams["figure.figsize"] = (25, 5)
-# x = np.arange(np.max([len(i) for i in values]))
 x = np.array(np.arange(0, 3*len(values[0]), 3))
 
 for i in range(len(values_mean)):

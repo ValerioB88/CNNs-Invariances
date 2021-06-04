@@ -254,8 +254,6 @@ def get_distance_fun(distance_transform):
         distAct = DistanceActivationScale
     elif distance_transform == 'Translate':
         distAct = DistanceActivationTranslate
-    # elif distance_transform == 'DiffClasses':
-    #     distAct = DistanceActivationDiffClasses
     elif distance_transform == 'Contrast':
         distAct = DistanceActivationContrast
     elif distance_transform == 'Brightness':
@@ -313,8 +311,7 @@ def get_cifar10_exp(network_name):
 
     stats = {'mean': [0.4914, 0.4822, 0.4465], 'std': [0.247, 0.243, 0.261]}
     add_PIL_transforms = None
-    # add_PIL_transforms = [torchvision.transforms.Resize(size=(128, 128))]
-    dataset = add_compute_stats(SubsetImageFolder)(root='./data/CIFAR10/train', 
+    dataset = add_compute_stats(SubsetImageFolder)(root='./data/CIFAR10/train',
                                                    add_PIL_transforms=add_PIL_transforms,
                                                    name_generator="train cifar10", 
                                                    save_stats_file=None,

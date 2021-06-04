@@ -13,6 +13,7 @@ def get_filename(pt_transf, transf, pt_objs, seed):
     f = pickle.load(open(filename, 'rb'))[0]['test ETH']['total_accuracy']
     return f
 
+
 def get_mean_std(pt_transf, transf, pt_objs):
     m = [get_filename(pt_transf, transf, 250, s) for s in [1, 2, 3]]
     return np.mean(m), np.std(m)

@@ -86,12 +86,6 @@ def arrange_plot():
     ax.add_artist(leg1)
     plt.setp(ax.get_xticklabels(), rotation=0, fontsize=size_text)
     plt.setp(ax.get_yticklabels(), rotation=0, fontsize=size_text)
-    # plt.subplots_adjust(top=0.88,
-    #                     bottom=0.11,
-    #                     left=0.055,
-    #                     right=0.9,
-    #                     hspace=0.185,
-    #                     wspace=0.185)
     plt.grid('on')
     plt.xlabel('Num. Training Objects', fontsize=size_text)
     plt.ylabel('Invariance Metric', fontsize=size_text)

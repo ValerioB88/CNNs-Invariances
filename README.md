@@ -1,11 +1,21 @@
 # Learning Online Visual Invariances for Novel Objects via Supervised and Self-Supervised Training
 This document contains necessary info to replicate the results from the paper.
 
+# Requirements
+A part from the standard ML libraries (and PyTorch), you may need to run:
+```
+pip install neptune-client
+pip install sty
+```
+
 # Datasets
 ## ShapeNet
-The ShapeNet dataset with 50 objects per class is included. We have verified in the paper that training on 50 Objects or 500 doesn't make much different, and sharing a ShapeNet dataset with >50 objects is too demanding in terms of space.
-To make things work, put the dataset in `./data`.
-We use 10 classes for training and 10 classes for computing the cosine similarity and other metrics. This is done automatically in the script. You can also use a different number of objects (lower than 50), which will be automatically computed in the script. You won't need to touch this dataset folders. 
+You can download the ShapeNet dataset from here https://drive.google.com/file/d/1XiT5JKBHLtGMLmrsAVIEproLs5m7dpWO/view?usp=sharing
+
+This version contains 55 classes, 50 objects per class, each object represented from 80 different viewpoints, for a total of 220000 images.
+We have verified in the paper that training on 50 Objects or 500 doesn't make much different, and thus we decided to share a more compact version of the full ShapeNet.
+To make things work, put the dataset in `./data/ShapeNet2D` (so that the dataset is gonna be in `./data/ShapeNet2D/ShapeNet2DNomat_50objs/`.
+We use 10 classes for training and 10 different classes for computing the cosine similarity and other metrics. This is done automatically in the script. If you want to use a lower number of objects (up to 50) you do not need to change the dataset, but it can be done by command line as explained below. 
 The 20 classes are all taken from the folder `./data/ShapeNet2D/ShapeNet2DNomat_50objs/train`. The other folders will be used for a variety of tests.
 
 
@@ -26,13 +36,13 @@ To replicate the results you need to
 
 ## 1. Train each network
 This is done in `./code/experiments/transformations/shapenet_fulltrain.py`.
-This script uses ML_framework, my experimental framework, which accepts a multitude of parameters to control all aspects of training.
+This script uses ML_framework, a custom experimental framework, which accepts a multitude of parameters to control all aspects of training.
 
+To replicate the paper you can simply call `./code/experiments/transformations/run_pipeline_SN_multiobj_simple`. This will run all the networks with all the transformations for all seeds. This will run 9 (networks) * 3 (seeds) * 7 (transformation conditions) = 189 experiments, which may be too long.
+ 
+To run parallel jobs you can check the `./code/experiments/transformations/run_pipeline_SN_multiobj_parallel`. It uses a `job_manager.py` to send multiple jobs and run them one after another across several gpus (3 in the script). This speeds up the training a lot, but I haven't tested it on other machines.
 
-To replicate the paper (with the ShapeNet x 50 objs) you can simply call `run_pipeline_SN_multiobj_simple`. This will run all the networks with all the transformations for all seeds. However, this may take too long and is not ideal. 
-To run parallel jobs you can check the `./code/experiments/transformations/run_pipeline_SN_multiobj_parallel`. I use a `job_manager.py` to send multiple jobs and run them one after another across several gpus (3 in the script). This speeds up the training a lot, but I haven't tested it on other machines.
-
-If you just want to try to run it with one network, you can use something like this:
+If you just want to run a single condition (one network on one transformation), you can use something like this:
 
 `python code/shapenet_fulltrain.py --network_name samediffnet -transform v --exp_max_obj 50 --shapenet_folder ShapeNet2DNomat_50objs --seed 1`
 
@@ -41,9 +51,10 @@ If you just want to try to run it with one network, you can use something like t
 Do not pass `-transform` if you want to train the network _without_ any transformation.
 Even though not used in the paper, you can also use combination of transformations (vt, rsb, etc.).
 `exp_max_obj` is the number of objects _per class_ you will get from the dataset. The provided dataset has 50 objects, so you can use any number lower than that. 
+Leave `shapenet_folder` unchanged. 
 
 Notice that the script will automatically select the 10 classes used for training. 
-It will save the results in `models/transformations/ShapeNet/etc`.
+It will save the results in `models/transformations/ShapeNet/...`.
 
 
 ## 2. Run the 5AFT Task
@@ -78,8 +89,8 @@ _BOTTOM_
 
 
 # Neptune.ai Tracking
-Across the codebase, I make extensive use of Neptune.ai for data visualization, debug, showing the database etc. 
-However, Neptune.ai is not so spreadly used so I disabled it in the provided code. 
+Across the codebase, I make extensive use of Neptune.ai for data visualization, debug, showing the dataset samples etc. 
+However, Neptune.ai is not so commonly used so I disabled it in the provided code. 
 If you want to enable, you need to: 
 1. Create a Neptune.ai project with name All-Transformations
 2. In `./code/ML_framework/experiment.py`, line `192`, change the `neptune_run` with your username.
