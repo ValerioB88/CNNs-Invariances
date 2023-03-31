@@ -10,7 +10,7 @@ pip install sty
 
 # Datasets
 ## ShapeNet
-You can download the ShapeNet dataset from here https://drive.google.com/file/d/1XiT5JKBHLtGMLmrsAVIEproLs5m7dpWO/view?usp=sharing
+You can download the ShapeNet dataset from here [https://drive.google.com/file/d/1XiT5JKBHLtGMLmrsAVIEproLs5m7dpWO/view?usp=sharing](https://drive.google.com/file/d/1UHXFWffwMux1P_8p2adeE2gP4HF46dv4/view?usp=sharing)
 
 This version contains 55 classes, 50 objects per class, each object represented from 80 different viewpoints, for a total of 220000 images.
 We have verified in the paper that training on 50 Objects or 500 doesn't make much different, and thus we decided to share a more compact version of the full ShapeNet.
